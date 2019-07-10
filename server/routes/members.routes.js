@@ -30,7 +30,11 @@ router.get('/filteredMembers', (req, res) => {
       savedMembers = [...members]
       Member.deleteMany()
         .then(x => {
-          savedMembers = savedMembers.filter(eachMember => eachMember.image.includes('http') && eachMember.bio[0] !== "0" && eachMember.name[0] !== "0" && eachMember.age > 18 && eachMember.age < 67)
+          savedMembers = savedMembers.filter(eachMember => eachMember.image.includes('http')
+            && eachMember.bio[0] !== "0"
+            && eachMember.name[0] !== "0"
+            && eachMember.age > 18
+            && eachMember.age < 67)
           Member.insertMany(savedMembers)
             .then(createdMembers => console.log(createdMembers.length))
             .catch(err => console.log('Error:', err))
