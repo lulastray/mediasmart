@@ -15,7 +15,7 @@ class MemberList extends Component {
     console.log('voy a services')
     this.services.getAllMembers()
       .then(allMembers => {
-        console.log(allMembers)
+        console.log('respuesta de services al front', allMembers)
         this.setState({ members: allMembers })
       })
   }

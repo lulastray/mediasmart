@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom'
 const MembersCard = theMember => {
 
   return (
-    <div class="card mb-3" style="max-width: 540px;">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src={theMember.image} class="card-img" alt={theMember.name} />
+    <div className="card mb-3">
+      <div className="row no-gutters">
+        <div className="col-md-4">
+          <img src={theMember.image} className="card-img" alt={theMember.name} />
         </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{theMember.name}</h5>
-            <p class="card-text">{theMember.age}</p>
+        <div className="col-md-8">
+          <div className="card-body">
+            <h5 className="card-title">{theMember.name}</h5>
+            <p className="card-text">{theMember.age}</p>
           </div>
         </div>
       </div>

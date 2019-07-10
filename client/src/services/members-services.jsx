@@ -5,16 +5,16 @@ export default class services {
   constructor() {
 
     this.service = axios.create({
-      baseUrl: 'http://localhost:5000'
+      baseURL: 'http://localhost:5000'
     })
   }
 
   getAllMembers = () => {
     console.log('entro en services')
-    return this.service.get('/  memberList')
+    return this.service.get('/memberList')
       .then(allMembers => {
-        console.log(allMembers.data)
-        // allMembers.data
+        console.log('respuesta del back a services', allMembers.data)
+        return allMembers.data
       })
       .catch(err => console.log('Error:', err))
   }
