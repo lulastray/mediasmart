@@ -1,28 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import MemberList from './components/member-list'
+import MemberDetails from './components/member-details'
 import { Switch, Route } from 'react-router-dom'
+import Navigator from './components/navigation'
+import Home from './components/home'
 
 
 class App extends Component {
 
-  constructor() {
-    super()
 
-  }
 
 
   render() {
     return (
       <div>
-        <MemberList />
+        <Navigator />
+
+        <Switch>
+          <Route path='/' exact component={Home} />
+          <Route path='/memberList' extact component={MemberList} />}
+          <Route path='/memberDetail/:id' exact component={MemberDetails} />
+        </Switch>
       </div>
     );
   }
 }
 
 export default App;
+
+
+
 // class App extends Component {
 
 

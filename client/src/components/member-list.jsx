@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import MemberServices from '../services/members-services'
-import MembersCard from './members-card'
+import MembersCard from './member-card'
 
 class MemberList extends Component {
 
@@ -12,10 +12,10 @@ class MemberList extends Component {
   }
 
   componentDidMount() {
-    console.log('voy a services')
+    // console.log('voy a services')
     this.services.getAllMembers()
       .then(allMembers => {
-        console.log('respuesta de services al front', allMembers)
+        // console.log('respuesta de services al front', allMembers)
         this.setState({ members: allMembers })
       })
   }
@@ -23,8 +23,10 @@ class MemberList extends Component {
   render() {
 
     return (
-      <div>
-        {this.state.members.map((theMember, idx) => <MembersCard key={idx} {...theMember} />)}
+      <div className="wrapper">
+        <div className="row no-gutters">
+          {this.state.members.map((theMember, idx) => <MembersCard key={idx} {...theMember} />)}
+        </div>
       </div>
     )
   }
