@@ -50,50 +50,70 @@ router.get('/filteredMembers', (req, res) => {
     .catch(err => ('Error:', err))
 })
 
-// router.get('/memberList', (req, res) => {
+router.get('/memberList', (req, res) => {
 
-//   Member.find()
-//     .then(allMembers => {
-//       let savedMembers = [...allMembers]
-//       const now = Date.now()
-//       const updated = new Date(allMembers[0].updatedAt)
-//       const lastUpdate = Date.UTC(updated.getFullYear(), updated.getMonth(), updated.getDay(), updated.getHours(), updated.getMinutes())
-//       const apiUpdate = now.setHours(1, 0, 0)
-//       if (apiUpdate > lastUpdate) {
+  Member.find()
+    .then(allMembers => {
 
-//         console.log("Updating")
-//         Member.deleteMany()
-//           .then(x => {
-//             for (let i = 0; i < 1000; i++) {
-//               axios.get(`http://work.mediasmart.io/?page=${i}&page_size=1`, { headers: { 'Authorization': 'mediasmart2019', 'Content-Type': 'application/json' } })
-//                 .then(member => {
-//                   const newMember = { age, image, name, bio } = member.data[0]
-//                   newMember.teamId = member.data[0].id
-//                   Member.create(newMember)
-//                     .then(createdMember => {
-//                       console.log('He creado un miembro ')
+      let savedMembers = [...allMembers]
+
+      Member.deleteMany()
+        .then(x => {
+          const nextIncorporation = {
+            age: 18,
+            image: "http://www.fotodeguapa.com/preciosa.jpg",
+            name: "Lucía Astray",
+            bio: "La chica favorita del mundo de David",
+          }
+          savedMembers.push(nextIncorporation)
+
+          savedMembers = savedMembers.filter(eachMember => eachMember.image.includes('http')
+            && eachMember.bio[0] !== "0"
+            && eachMember.name[0] !== "0"
+            && eachMember.age > 20
+            && eachMember.age < 60)
+          Member.insertMany(savedMembers)
+            .then(createdMembers => {
+              console.log("He creado " + createdMembers.length + "nuevos miembros")
+
+              const now = new Date()
+              const updated = new Date(createdMembers[0].updatedAt)
+              const lastUpdate = updated.getTime()
+              const apiUpdate = now.setHours(3, 0, 0)
+
+              if (!allMembers.length || apiUpdate > lastUpdate) {
+                updateDB()
+              }
+
+              res.json(createdMembers)
+            })
+        })
+    })
 
 
-//                       //   Member.find()
-//                       //     .then(members => {
-//                       //       savedMembers = [...members]
-//                       //       Member.deleteMany()
-//                       //         .then(x => {
-//                       //           savedMembers = savedMembers.filter(eachMember => eachMember.image.includes('http')
-//                       //             && eachMember.bio[0] !== "0"
-//                       //             && eachMember.name[0] !== "0"
-//                       //             && eachMember.age > 20
-//                       //             && eachMember.age < 60)
-//                       //           Member.insertMany(savedMembers)
-//                       //             .then(createdMembers => {
-//                       //               console.log(createdMembers.length)
-//                       //               res.json(createdMembers)
-//                       //             })
-//                       //             .catch(err => console.log('Error:', err))
-//                       //         })
-//                       //     })
-//                       //     .catch(err => ('Error:', err))
-//                       // })
+
+
+  console.log("Updating")
+  Member.deleteMany()
+    .then(x => {
+      for (let i = 0; i < 10; i++) {
+        axios.get(`http://work.mediasmart.io/?page=${i}&page_size=1`, { headers: { 'Authorization': 'mediasmart2019', 'Content-Type': 'application/json' } })
+          .then(member => {
+            const newMember = { age, image, name, bio } = member.data[0]
+            newMember.teamId = member.data[0].id
+            Member.create(newMember)
+              .then(x => console.log('Creando miembros...'))
+          })
+      }
+      console.log("He salido del bucle")
+    })
+
+
+
+})
+})
+
+
 
 
 
@@ -130,12 +150,12 @@ router.get('/filteredMembers', (req, res) => {
 
 // })
 
-router.get('/memberList', (req, res) => {
-  // console.log('entro en el back')
-  Member.find()
-    .then(allMembers => res.json(allMembers))
-    .catch(err => console.log('Error:', err))
-})
+// router.get('/memberList', (req, res) => {
+//   // console.log('entro en el back')
+//   Member.find()
+//     .then(allMembers => res.json(allMembers))
+//     .catch(err => console.log('Error:', err))
+// })
 
 
 

@@ -5,10 +5,14 @@ const Navigator = () => {
 
   return (
     <header className="Nav-header">
-      <h1 className="Nav-logo" alt="logo">#</h1>
-      <p>
-        Members
+      <div className="nav-logo">
+        <h1 alt="logo">#</h1>
+      </div>
+      <div className="nav-text">
+        <p>
+          Members
         </p>
+      </div>
 
     </header>
 

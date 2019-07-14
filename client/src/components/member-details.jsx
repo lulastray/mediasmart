@@ -52,7 +52,7 @@ class MemberDetails extends Component {
 
           <div className="first-row-text">
             <h5 className="name-detail">Name: </h5>
-            <p className> {this.state.member.name}</p>
+            <p> {this.state.member.name}</p>
             <div>
               <h5 className="age-detail">Age: </h5>
               <p> {this.state.member.age}</p>
