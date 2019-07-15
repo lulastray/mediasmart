@@ -98,7 +98,7 @@ router.get('/memberList', (req, res) => {
                       && newMember.age < 60) {
                       Member.create(newMember)
                         .then(createdMember => {
-                          createdMembers++
+                          counter++
                           console.log("Se ha creado un miembro y ya van " + counter + ". Este se creó " + createdMember.name)
                         })
                         .catch(err => {
