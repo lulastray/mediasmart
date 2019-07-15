@@ -6,17 +6,30 @@ class MemberList extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { members: [] }
+
+    this.state = {
+      members: [],
+      loading: false
+    }
     this.services = new MemberServices()
+
 
   }
 
   componentDidMount() {
+    this.setState({
+      ...this.state,
+      loading: true
+    })
     // console.log('voy a services')
     this.services.getAllMembers()
       .then(allMembers => {
         // console.log('respuesta de services al front', allMembers)
-        this.setState({ members: allMembers })
+        this.setState({
+          ...this.state,
+          members: allMembers,
+          loading: false
+        })
       })
   }
 
@@ -24,64 +37,21 @@ class MemberList extends Component {
 
     return (
       <div className="wrapper">
-        <div className="row no-gutters">
-          {this.state.members.map((theMember, idx) => <MembersCard key={idx} {...theMember} />)}
-        </div>
+        {
+          this.state.loading ?
+            <div className="loader-icon"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+
+              <p className="apartForm">updating...</p></div> :
+
+            <div className="row no-gutters">
+              {this.state.members.map((theMember, idx) => <MembersCard key={idx} {...theMember} />)}
+            </div>
+
+        }
       </div>
+
     )
   }
-
 }
 
-
 export default MemberList
-
-
-
-
-
-
-
-
-// import React, { Component } from 'react'
-// import CoasterServices from '../service/coaster-services'
-// import CoasterCard from './coaster-card'
-// import CoasterForm from './coaster-form'
-
-// class CoastersList extends Component {
-
-//   constructor(props) {
-//     super(props)
-//     this.state = { coasters: [] }
-//     this.services = new CoasterServices()
-//   }
-
-
-//   componentDidMount() {
-//     this.services.getAllCoasters()
-//       .then(allCoasters => this.setState({ coasters: allCoasters }))
-//   }
-
-
-//   render() {
-//     return (
-
-//       <div className="container">
-
-//         <h1>Listado de montañas rusas</h1>
-
-//         {this.props.userInSession ? <CoasterForm /> : null}
-
-
-//         <div className="row coaster-list">
-
-//           {this.state.coasters.map((theCoaster, idx) => <CoasterCard key={idx} {...theCoaster} />)}
-
-//         </div>
-
-//       </div>
-//     )
-//   }
-// }
-
-// export default CoastersList

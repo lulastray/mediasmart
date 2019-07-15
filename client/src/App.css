@@ -72,6 +72,14 @@ header p{
 
 /*MemberList*/
 
+.loader-icon {
+ 
+  text-align: center;
+  margin-top: 40vh
+  
+  
+}
+
 .wrapper {
   display: block;
   width: 100%;

@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-const Navigator = () => {
+const Navigation = () => {
 
   return (
     <header className="Nav-header">
@@ -20,7 +20,7 @@ const Navigator = () => {
 }
 
 
-export default Navigator
+export default Navigation
 
 
 

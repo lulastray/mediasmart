@@ -12,12 +12,17 @@ router.get('/updateMembers', (req, res, next) => {
 
         const newMember = { age, image, name, bio } = members.data[0]
         newMember.teamId = members.data[0].id
-        Member.create(newMember)
-          .then(createdMember => {
-            console.log('He creado un miembro ' + createdMember)
-            res.json(newMember)
-          })
-          .catch(err => console.log('Error:', err))
+
+        if (newMember.image.includes('http') && newMember.bio[0] !== "0" && newMember.name[0] !== "0") {
+
+
+          Member.create(newMember)
+            .then(createdMember => {
+              console.log('He creado un miembro ' + createdMember)
+              res.json(newMember)
+            })
+            .catch(err => console.log('Error:', err))
+        }
       })
       .catch(err => console.log('Error:', err))
 
@@ -63,65 +68,79 @@ router.get('/memberList', (req, res) => {
       const apiUpdate = now.setHours(3, 0, 0)
 
 
-      if (true) {
+      if (apiUpdate > lastUpdate) {
         Member.deleteMany()
           .then(x => {
 
             const nextIncorporation = {
               age: 18,
-              image: "http://www.fotodelucia.com/preciosa.jpg",
+              image: "https://res.cloudinary.com/lulas/image/upload/v1563177652/lucia-astray-component_ztrlsa.jpg",
               name: "Lucía Astray",
-              bio: "Lucía es nuestra último fichaje en la empresa",
+              bio: "Lucía es nuestro último fichaje en el equipo. Viene del sector audiovisual, en concreto de la edición y la postproducción. Esta experiencia le aporta un gran valor ya que no solo ha aprendido a adaptarse a los distintos proyectos, programas y equipos sino, también, a buscarse las castañas ella solita.Su creatividad y su curiosidad le llevo a investigar otras disciplinas y ahí descubrió y se sumergió de lleno en el desarrollo web. A nosotros nos encanta su pasión por la vida y por el trabajo bien hecho, además de su sonrisa que denota un sentido del humor.",
             }
             Member.create(nextIncorporation)
 
-            for (let i = 0; i < 10; i++) {
-              axios.get(`http://work.mediasmart.io/?page=${i}&page_size=1`, { headers: { 'Authorization': 'mediasmart2019', 'Content-Type': 'application/json' } })
-                .then(member => {
-                  const newMember = { age, image, name, bio } = member.data[0]
-                  newMember.teamId = member.data[0].id
-                  if (newMember.image.includes('http')
-                    && newMember.bio[0] !== "0"
-                    && newMember.name[0] !== "0"
-                    && newMember.age > 20
-                    && newMember.age < 60) {
-                    Member.create(newMember)
-                      .then(x => console.log('Creando miembros...'))
-                  }
-                })
-            }
+            let usersCreated = new Promise((resolve, reject) => {
+              let counter = 0
+
+
+              for (let i = 0; i < 1000; i++) {
+                axios.get(`http://work.mediasmart.io/?page=${i}&page_size=1`, { headers: { 'Authorization': 'mediasmart2019', 'Content-Type': 'application/json' } })
+                  .then(member => {
+                    const newMember = { age, image, name, bio } = member.data[0]
+                    newMember.teamId = member.data[0].id
+                    if (newMember.image.toString().includes('http')
+                      && typeof newMember.bio !== "number"
+                      && typeof newMember.name !== "number"
+                      && newMember.bio[0] !== "0"
+                      && newMember.name[0] !== "0"
+                      && newMember.age > 20
+                      && newMember.age < 60) {
+                      Member.create(newMember)
+                        .then(createdMember => {
+                          createdMembers++
+                          console.log("Se ha creado un miembro y ya van " + counter + ". Este se creó " + createdMember.name)
+                        })
+                        .catch(err => {
+                          counter++
+                          console.log("Un miembro no se ha podido crear por el error " + err + " y ya van " + counter)
+                        })
+                    } else {
+                      counter++
+                      console.log("Se ha filtrado un miembro y ya van " + counter + ". Este se filtró ")
+                      console.log(newMember.name)
+                    }
+                    if (counter == 1000) {
+                      console.log("Debería retornar")
+                      resolve("Base de datos actualizada")
+                    }
+                  })
+                  .catch(err => {
+                    counter++
+                    console.log("La llamada a la API ha fallado " + err)
+                  })
+              }
+            })
+
+            usersCreated
+              .then(response => {
+                console.log("HA RETORNADO")
+                console.log(response)
+                Member.find()
+                  .then(allMembers => res.json(allMembers))
+              })
+              .catch(err => {
+                console.log(err)
+                res.json(savedMembers)
+              })
+
           })
+      } else {
+        res.json(allMembers)
+
       }
 
-      res.json(allMembers)
-
-
-
-
-      // Member.deleteMany()
-      //   .then(x => {
-
-
-      //     savedMembers = savedMembers.filter(eachMember => 
-      //     Member.insertMany(savedMembers)
-      //       .then(createdMembers => {
-      //         console.log("He creado " + createdMembers.length + "nuevos miembros")
-
-
-
-
-      //         return createdMembers
-      //       })
-      //   })
     })
-
-
-
-
-
-
-
-
 })
 
 
@@ -129,44 +148,10 @@ router.get('/memberList', (req, res) => {
 
 
 
-//                       // Member.find()
-//                       // Member.deleteMany()
-//                       //   .then(foundMembers => {
-//                       //     foundMembers = foundMembers.filter(eachMember => eachMember.image.includes('http')
-//                       //       && eachMember.bio[0] !== "0"
-//                       //       && eachMember.name[0] !== "0"
-//                       //       && eachMember.age > 18
-//                       //       && eachMember.age < 67)
-//                       //       .then(x => {
-//                       //         Member.insertMany(foundMembers)
-//                       //           .then(createdMembers => savedMembers = createdMembers)
-//                       //           .catch(err => console.log('Error:', err))
-//                       //       })
-//                       //       .catch(err => console.log('Error:', err))
-//                       //   })
-//                       console.log(apiUpdate > lastUpdate)
-//                     })
-//                     .catch(err => console.log('Error:', err))
-//                 })
-//             }
-//           })
-//           .catch(err => console.log('Error:', err))
-//       }
 
-//       console.log("Returning without updating")
-//       res.json(savedMembers)
-//         .catch(err => console.log('Error:', err))
-//     }
-//     )
 
-// })
 
-// router.get('/memberList', (req, res) => {
-//   // console.log('entro en el back')
-//   Member.find()
-//     .then(allMembers => res.json(allMembers))
-//     .catch(err => console.log('Error:', err))
-// })
+
 
 
 
@@ -191,13 +176,3 @@ router.get('/memberDetail/:_id', (req, res) => {
 module.exports = router;
 
 
-// router.get('/tales-viewer/:_id', (req, res) => {
-//   const id = req.params._id
-
-//   Book.findById(id)
-//     .then(data => {
-//       console.log(data)
-//       return res.json(data)
-//     })
-//     .catch(err => console.log('Error:', err))
-// })
